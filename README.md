@@ -2,7 +2,9 @@
 cx-speedcameras is a FiveM resource for Qbox servers that implements speed cameras to detect and fine players for exceeding speed limits. It features configurable camera locations, tiered fines, visual and audio effects.
 
 # Preview
-[![Youtube Preview](https://img.youtube.com/vi/_TE6H2EEG_0/0.jpg)](https://www.youtube.com/watch?v=_TE6H2EEG_0)
+
+[![Watch the video](https://img.youtube.com/vi/_TE6H2EEG_0/maxresdefault.jpg)](https://youtu.be/_TE6H2EEG_0)
+
 
 ## Features
 - **Speed Cameras**: Detects player vehicles exceeding speed limits at defined locations, with configurable grace periods and cooldowns.
