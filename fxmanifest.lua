@@ -5,15 +5,15 @@ description 'CX Speed Cameras (Qbox)'
 version '1.0.0'
 
 shared_scripts {
-    'config.lua'
+    'shared/config.lua'
 }
 
 client_scripts {
-    'client.lua'
+    'client/client.lua'
 }
 
 server_scripts {
-    'server.lua'
+    'server/server.lua'
 }
 
 lua54 'yes'
