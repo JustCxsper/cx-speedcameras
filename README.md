@@ -1,6 +1,9 @@
 # CX Speed Cameras (Qbox)
 cx-speedcameras is a FiveM resource for Qbox servers that implements speed cameras to detect and fine players for exceeding speed limits. It features configurable camera locations, tiered fines, visual and audio effects.
 
+# Preview
+[![Youtube Preview](https://img.youtube.com/vi/_TE6H2EEG_0/0.jpg)](https://www.youtube.com/watch?v=_TE6H2EEG_0)
+
 ## Features
 - **Speed Cameras**: Detects player vehicles exceeding speed limits at defined locations, with configurable grace periods and cooldowns.
 - **Tiered Fines**: Applies fines based on speed thresholds (e.g., $150 for >35 MPH, $500 for >90 MPH), deducted from the player's bank.
@@ -10,5 +13,7 @@ cx-speedcameras is a FiveM resource for Qbox servers that implements speed camer
 - **Server-Side Notifications**: Uses `ox_lib:notify` for notifications, with fallbacks to `qbx_core:Notify` or GTA V native notifications.
 - **Debug Toggle**: Configurable debug logging to track resource start, camera spawning, fine calculations, and notifications.
 - **Emergency Vehicle Exemption**: Ignores emergency vehicles.
+
+![Thumbnail](https://testing.strataservers.com/download/cx-speed.png)
 
 
