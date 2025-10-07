@@ -12,14 +12,27 @@ local function IsEmergencyVehicle(vehicle)
     return vehicleClass == 18
 end
 
+
+local function GetFineFromSpeed(speed)
+    local fineAmount = 0
+    for i = #Config.Fines, 1, -1 do
+        if speed >= Config.Fines[i].minSpeed then
+            fineAmount = Config.Fines[i].fine
+            print("[DEBUG] Got Fine From Speed: $" .. fineAmount)
+            break
+        end
+    end
+    return fineAmount
+end
+
+
 Citizen.CreateThread(function()
     if not Config.UseBlips then return end
-    local propModel = GetHashKey('prop_cctv_pole_01a')  -- Camera prop
+    local propModel = GetHashKey('prop_cctv_pole_01a')
     RequestModel(propModel)
     while not HasModelLoaded(propModel) do Wait(0) end
 
     for i, camera in ipairs(Config.Cameras) do
-        -- Create blip
         local blip = AddBlipForCoord(camera.coords.x, camera.coords.y, camera.coords.z)
         SetBlipSprite(blip, 184)
         SetBlipDisplay(blip, 4)
@@ -29,14 +42,9 @@ Citizen.CreateThread(function()
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentString("Speed Camera")
         EndTextCommandSetBlipName(blip)
-        --if Config.Debug then
-        --    print("[DEBUG] Blips Created", camera.coords)
-        --end
-
-        -- Spawn camera object with rotation
         local prop = CreateObject(propModel, camera.coords.x, camera.coords.y, camera.coords.z, false, false, false)
-        SetEntityHeading(prop, camera.coords.w)  -- Apply heading from vector4
-        FreezeEntityPosition(prop, true)  -- Lock in place
+        SetEntityHeading(prop, camera.coords.w)
+        FreezeEntityPosition(prop, true)
         if Config.Debug then
             print("Camera Spawned - Speed Limit: " .. camera.speedLimit .. ", Location: " .. tostring(camera.coords) .. ", Heading: " .. camera.coords.w)
         end
@@ -63,6 +71,27 @@ Citizen.CreateThread(function()
                             local driverPed = GetPedInVehicleSeat(vehicle, -1)
                             if playerPed == driverPed then
                                 TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i)
+
+                                local vehicle = GetVehiclePedIsIn(playerPed, false)
+                                local vehName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
+                                local fineAmount = GetFineFromSpeed(speed)
+                                local playerSpeed = math.floor(speed)
+                                local limit = camera.speedLimit
+                                local message = ("You were caught going %d MPH in a %s | Speed Limit: %d MPH | A fine of $%d has been deducted from your bank account."):format(
+                                    playerSpeed,
+                                    vehName,
+                                    limit,
+                                    fineAmount
+                                )
+
+                                TriggerServerEvent('qb-phone:server:sendNewMail', {
+                                    sender = "dva@mrpd.gov.uk",
+                                    subject = "Fine Issued",
+                                    message = message
+                                    
+                                })
+                                print("[DEBUG] Email Sent: " .. message)
+
                                 if Config.UseFlashEffect then
                                     SetFlash(0, 0, 200, 4000, 200)
                                     if Config.Debug then
