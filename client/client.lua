@@ -14,7 +14,7 @@ end
 
 Citizen.CreateThread(function()
     if not Config.UseBlips then return end
-    local propModel = GetHashKey('prop_cctv_pole_01a')
+    local propModel = GetHashKey('prop_cctv_pole_01a')  -- Camera prop
     RequestModel(propModel)
     while not HasModelLoaded(propModel) do Wait(0) end
 
@@ -33,10 +33,10 @@ Citizen.CreateThread(function()
         --    print("[DEBUG] Blips Created", camera.coords)
         --end
 
-        -- Spawn camera object
+        -- Spawn camera object with rotation
         local prop = CreateObject(propModel, camera.coords.x, camera.coords.y, camera.coords.z, false, false, false)
-        SetEntityHeading(prop, camera.coords.w)
-        FreezeEntityPosition(prop, true)
+        SetEntityHeading(prop, camera.coords.w)  -- Apply heading from vector4
+        FreezeEntityPosition(prop, true)  -- Lock in place
         if Config.Debug then
             print("Camera Spawned - Speed Limit: " .. camera.speedLimit .. ", Location: " .. tostring(camera.coords) .. ", Heading: " .. camera.coords.w)
         end
@@ -60,22 +60,23 @@ Citizen.CreateThread(function()
                         sleep = 0
                         local limit = camera.speedLimit + Config.GracePeriod
                         if speed > limit and (not lastTriggered[i] or (GetGameTimer() - lastTriggered[i]) > Config.Cooldown * 1000) then
-                            TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i)
+                            local driverPed = GetPedInVehicleSeat(vehicle, -1)
+                            if playerPed == driverPed then
+                                TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i)
+                                if Config.UseFlashEffect then
+                                    SetFlash(0, 0, 200, 4000, 200)
+                                    if Config.Debug then
+                                        print("[DEBUG] Flash Effect Activated")
+                                    end
+                                end
+                                if Config.UseCameraSound then
+                                    PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
+                                    if Config.Debug then
+                                        print("[DEBUG] Shutter Sound Activated")
+                                    end
+                                end
+                            end
                             lastTriggered[i] = GetGameTimer()
-
-                            if Config.UseFlashEffect then
-                                SetFlash(0, 0, 200, 4000, 200)
-                                if Config.Debug then
-                                    print("[DEBUG] Flash Effect Activated")
-                                end
-                            end
-
-                            if Config.UseCameraSound then
-                                PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
-                                if Config.Debug then
-                                    print("[DEBUG] Shutter Sound Activated")
-                                end
-                            end
                         end
                     end
                 end
