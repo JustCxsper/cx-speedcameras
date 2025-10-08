@@ -4,7 +4,7 @@ cx-speedcameras is a FiveM resource for Qbox servers that implements speed camer
 # Changelog
 - **NWPD Emails**: Players now get a detailed email with their fine that has been issued.
 - **FIX**: Before all players recieved the fine, flash, audio when triggering a speedcamera. this is now set to drivers only.
-- **CLEANUP**: Cleaned up some stuff.
+- **FIX**: Flash now is shorter to make it feel more like a actual flash.
 
 
 # Preview
