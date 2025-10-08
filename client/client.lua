@@ -92,18 +92,19 @@ Citizen.CreateThread(function()
                                 })
                                 print("[DEBUG] Email Sent: " .. message)
 
-                                if Config.UseFlashEffect then
-                                    SetFlash(0, 0, 200, 4000, 200)
-                                    if Config.Debug then
-                                        print("[DEBUG] Flash Effect Activated")
-                                    end
-                                end
                                 if Config.UseCameraSound then
                                     PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
                                     if Config.Debug then
                                         print("[DEBUG] Shutter Sound Activated")
                                     end
                                 end
+                                if Config.UseFlashEffect then
+                                    SetFlash(0, 0, 200, 100, 200)
+                                    if Config.Debug then
+                                        print("[DEBUG] Flash Effect Activated")
+                                    end
+                                end
+
                             end
                             lastTriggered[i] = GetGameTimer()
                         end
