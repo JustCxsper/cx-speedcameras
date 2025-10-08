@@ -9,7 +9,7 @@ cx-speedcameras is a FiveM resource for Qbox servers that implements speed camer
 
 # Preview
 **Click the thumbnail to watch on youtube!**
-[![Watch the video](https://img.youtube.com/vi/_TE6H2EEG_0/maxresdefault.jpg)](https://youtu.be/_TE6H2EEG_0)
+[![Watch the video](https://img.youtube.com/vi/ndhhUA55Grw/maxresdefault.jpg)](https://www.youtube.com/watch?v=ndhhUA55Grw)
 
 
 ## Features
