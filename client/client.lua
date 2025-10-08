@@ -85,12 +85,19 @@ Citizen.CreateThread(function()
                                 )
 
                                 TriggerServerEvent('qb-phone:server:sendNewMail', {
-                                    sender = "dva@mrpd.gov.uk",
-                                    subject = "Fine Issued",
+                                    sender = "LSPD",
+                                    subject = "Speeding Fine Issued",
                                     message = message
                                     
                                 })
                                 print("[DEBUG] Email Sent: " .. message)
+
+                                if Config.UseFlashEffect then
+                                    SetFlash(0, 0, 200, 150, 200)
+                                    if Config.Debug then
+                                        print("[DEBUG] Flash Effect Activated")
+                                    end
+                                end
 
                                 if Config.UseCameraSound then
                                     PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
@@ -98,12 +105,8 @@ Citizen.CreateThread(function()
                                         print("[DEBUG] Shutter Sound Activated")
                                     end
                                 end
-                                if Config.UseFlashEffect then
-                                    SetFlash(0, 0, 200, 100, 200)
-                                    if Config.Debug then
-                                        print("[DEBUG] Flash Effect Activated")
-                                    end
-                                end
+
+
 
                             end
                             lastTriggered[i] = GetGameTimer()
