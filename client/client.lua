@@ -4,27 +4,13 @@ AddEventHandler('onClientResourceStart', function(resourceName)
     end
 end)
 
-local PlayerId = GetPlayerServerId(PlayerId())
+local PlayerId = GetPlayerServerId(PlayerPedId())
 local lastTriggered = {}
 
 local function IsEmergencyVehicle(vehicle)
     local vehicleClass = GetVehicleClass(vehicle)
     return vehicleClass == 18
 end
-
-
-local function GetFineFromSpeed(speed)
-    local fineAmount = 0
-    for i = #Config.Fines, 1, -1 do
-        if speed >= Config.Fines[i].minSpeed then
-            fineAmount = Config.Fines[i].fine
-            print("[DEBUG] Got Fine From Speed: $" .. fineAmount)
-            break
-        end
-    end
-    return fineAmount
-end
-
 
 Citizen.CreateThread(function()
     if not Config.UseBlips then return end
@@ -64,50 +50,16 @@ Citizen.CreateThread(function()
 
                 for i, camera in ipairs(Config.Cameras) do
                     local dist = #(GetEntityCoords(vehicle) - vector3(camera.coords.x, camera.coords.y, camera.coords.z))
-                    if dist < 60.0 then  -- Detection radius
+                    if dist < 60.0 then
                         sleep = 0
                         local limit = camera.speedLimit + Config.GracePeriod
                         if speed > limit and (not lastTriggered[i] or (GetGameTimer() - lastTriggered[i]) > Config.Cooldown * 1000) then
                             local driverPed = GetPedInVehicleSeat(vehicle, -1)
                             if playerPed == driverPed then
-                                TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i)
-
-                                local vehicle = GetVehiclePedIsIn(playerPed, false)
-                                local vehName = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
-                                local fineAmount = GetFineFromSpeed(speed)
-                                local playerSpeed = math.floor(speed)
-                                local limit = camera.speedLimit
-                                local message = ("You were caught going %d MPH in a %s | Speed Limit: %d MPH | A fine of $%d has been deducted from your bank account."):format(
-                                    playerSpeed,
-                                    vehName,
-                                    limit,
-                                    fineAmount
-                                )
-
-                                TriggerServerEvent('qb-phone:server:sendNewMail', {
-                                    sender = "LSPD",
-                                    subject = "Speeding Fine Issued",
-                                    message = message
-                                    
-                                })
-                                print("[DEBUG] Email Sent: " .. message)
-
-                                if Config.UseFlashEffect then
-                                    SetFlash(0, 0, 200, 150, 200)
-                                    if Config.Debug then
-                                        print("[DEBUG] Flash Effect Activated")
-                                    end
-                                end
-
-                                if Config.UseCameraSound then
-                                    PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
-                                    if Config.Debug then
-                                        print("[DEBUG] Shutter Sound Activated")
-                                    end
-                                end
-
-
-
+                                local vehModel = GetEntityModel(vehicle)
+                                local vehName = GetLabelText(GetDisplayNameFromVehicleModel(vehModel)) or "Unknown Vehicle"
+                                local plate = GetVehicleNumberPlateText(vehicle):gsub("%s+", "")
+                                TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i, vehName, plate)
                             end
                             lastTriggered[i] = GetGameTimer()
                         end
@@ -117,4 +69,46 @@ Citizen.CreateThread(function()
         end
         Wait(sleep)
     end
+end)
+
+RegisterNetEvent('cx-speedcameras:client:receiveFine')
+AddEventHandler('cx-speedcameras:client:receiveFine', function(speed, limit, fine, cameraIndex)
+    local playerPed = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(playerPed, false)
+    local vehName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))) or "Unknown Vehicle"
+    local playerSpeed = math.floor(speed)
+    local message = ("You were caught going %d MPH in a %s | Speed Limit: %d MPH | A fine of $%d has been deducted from your bank account."):format(
+        playerSpeed,
+        vehName,
+        limit,
+        fine
+    )
+
+    TriggerServerEvent('qb-phone:server:sendNewMail', {
+        sender = "LSPD",
+        subject = "Speeding Fine Issued",
+        message = message
+    })
+    print("[DEBUG] Email Sent: " .. message)
+
+    if Config.UseFlashEffect then
+        SetFlash(0, 0, 200, 150, 200)
+        if Config.Debug then
+            print("[DEBUG] Flash Effect Activated")
+        end
+    end
+
+    if Config.UseCameraSound then
+        PlaySoundFrontend(-1, "Camera_Shoot", "Phone_SoundSet_Default", true)
+        if Config.Debug then
+            print("[DEBUG] Shutter Sound Activated")
+        end
+    end
+end)
+
+RegisterNetEvent('cx-speedcameras:client:notify')
+AddEventHandler('cx-speedcameras:client:notify', function(message)
+    BeginTextCommandThefeedPost('STRING')
+    AddTextComponentSubstringPlayerName(message)
+    EndTextCommandThefeedPostTicker(true, false)
 end)

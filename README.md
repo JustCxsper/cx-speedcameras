@@ -6,11 +6,9 @@ cx-speedcameras is a FiveM resource for Qbox servers that implements speed camer
 - **FIX**: Before all players recieved the fine, flash, audio when triggering a speedcamera. this is now set to drivers only.
 - **FIX**: Flash now is shorter to make it feel more like a actual flash.
 
-
 # Preview
 **Click the thumbnail to watch on youtube!**
 [![Watch the video](https://img.youtube.com/vi/ndhhUA55Grw/maxresdefault.jpg)](https://www.youtube.com/watch?v=ndhhUA55Grw)
-
 
 ## Features
 - **Speed Cameras**: Detects player vehicles exceeding speed limits at defined locations, with configurable grace periods and cooldowns.
