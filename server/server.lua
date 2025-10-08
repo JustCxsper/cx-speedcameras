@@ -74,7 +74,7 @@ RegisterNetEvent('cx-speedcameras:server:checkFine', function(speed, limit, came
                 ),
                 color = 16711680,
                 image = {
-                    url = 'https://pbs.twimg.com/profile_images/1520485937679151104/ifeyV77d_400x400.png' -- Replace with your static image URL
+                    url = 'https://testing.strataservers.com/cx-scripts/speedcam.png' -- Replace with your static image URL
                 },
                 timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
             }
