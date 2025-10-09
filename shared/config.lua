@@ -8,7 +8,6 @@ Config.UseCameraSound = true
 Config.FinePlayers = true
 Config.GracePeriod = 5
 Config.Cooldown = 10
-Config.DiscordWebhook = 'https://discord.com/api/webhooks/1425549882046943252/JBIXxGiNlymuy8pfsmHMz9rPERwWJ1EzsItA10Q1XRqZOOtJNDXKd9X9VL3oM09YbUsf' -- Paste your Discord webhook URL here
 
 Config.Cameras = {
     {coords = vector4(200.0881, -812.6038, 30.0, 111.9241), speedLimit = 35},
