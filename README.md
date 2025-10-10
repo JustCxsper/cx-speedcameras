@@ -8,6 +8,7 @@ cx-speedcameras is a FiveM resource for Qbox servers that implements speed camer
 - **FIX**: Flash now is shorter to make it feel more like a actual flash.
 # Coming Soon
 - Include Police Dispatch Notifications
+- Take picture & Include in email of speeding fine
 # Preview
 **Click the thumbnail to watch on youtube!**
 [![Watch the video](https://img.youtube.com/vi/ndhhUA55Grw/maxresdefault.jpg)](https://www.youtube.com/watch?v=ndhhUA55Grw)
