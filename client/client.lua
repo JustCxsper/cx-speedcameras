@@ -59,6 +59,9 @@ Citizen.CreateThread(function()
                                 local vehModel = GetEntityModel(vehicle)
                                 local vehName = GetLabelText(GetDisplayNameFromVehicleModel(vehModel)) or "Unknown Vehicle"
                                 local plate = GetVehicleNumberPlateText(vehicle):gsub("%s+", "")
+                                if Config.Debug then
+                                    print("[DEBUG] Triggering server:checkFine - Speed: " .. math.floor(speed) .. ", Limit: " .. limit .. ", Camera: " .. i)
+                                end
                                 TriggerServerEvent('cx-speedcameras:server:checkFine', speed, camera.speedLimit, i, vehName, plate)
                             end
                             lastTriggered[i] = GetGameTimer()
@@ -73,6 +76,9 @@ end)
 
 RegisterNetEvent('cx-speedcameras:client:receiveFine')
 AddEventHandler('cx-speedcameras:client:receiveFine', function(speed, limit, fine, cameraIndex)
+    if Config.Debug then
+        print("[DEBUG] Received fine event - Speed: " .. speed .. ", Limit: " .. limit .. ", Fine: " .. fine .. ", Camera: " .. cameraIndex)
+    end
     local playerPed = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(playerPed, false)
     local vehName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))) or "Unknown Vehicle"
@@ -84,12 +90,13 @@ AddEventHandler('cx-speedcameras:client:receiveFine', function(speed, limit, fin
         fine
     )
 
+    if Config.Debug then print("[DEBUG] Attempting to send email: " .. message) end
     TriggerServerEvent('qb-phone:server:sendNewMail', {
         sender = "LSPD",
         subject = "Speeding Fine Issued",
         message = message
     })
-    print("[DEBUG] Email Sent: " .. message)
+    if Config.Debug then print("[DEBUG] Email event triggered for qb-phone") end
 
     if Config.UseFlashEffect then
         SetFlash(0, 0, 200, 150, 200)
@@ -108,6 +115,7 @@ end)
 
 RegisterNetEvent('cx-speedcameras:client:notify')
 AddEventHandler('cx-speedcameras:client:notify', function(message)
+    if Config.Debug then print("[DEBUG] Received notify event: " .. message) end
     BeginTextCommandThefeedPost('STRING')
     AddTextComponentSubstringPlayerName(message)
     EndTextCommandThefeedPostTicker(true, false)
