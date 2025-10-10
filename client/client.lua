@@ -96,7 +96,7 @@ AddEventHandler('cx-speedcameras:client:receiveFine', function(speed, limit, fin
         subject = "Speeding Fine Issued",
         message = message
     })
-    if Config.Debug then print("[DEBUG] Email event triggered for qb-phone") end
+    if Config.Debug then print("[DEBUG] Email event triggered") end
 
     if Config.UseFlashEffect then
         SetFlash(0, 0, 200, 150, 200)
